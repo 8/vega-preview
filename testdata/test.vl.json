@@ -1,0 +1,33 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data":{
+    "values": [
+      { "date": "01.06.2018", "count": 40 },
+      { "date": "02.06.2018", "count": 38 },
+      { "date": "03.06.2018", "count": 34 },
+      { "date": "04.06.2018", "count": 143 }
+    ],
+    "formatddddd": {
+      "parse": {
+        "date": "%d.%m.%y"
+      }
+    }
+  },
+  "mark":"bar",
+  "encoding": {
+    "x":{
+      "type": "ordinal",
+      "field": "date",
+      "axis": {
+        "title": "Date"
+      }
+    },
+    "y": {
+      "type": "quantitative",
+      "field": "count",
+      "axis": {
+        "title": "Count"
+      }
+    }
+  }
+}

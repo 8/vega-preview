@@ -1,6 +1,6 @@
 {
     "name": "vega-lite-preview",
-    "displayName": "vega-lite-preview",
+    "displayName": "Vega-Lite Preview",
     "description": "Preview for Vega-Lite",
     "version": "0.0.1",
     "publisher": "mdk",
@@ -11,14 +11,14 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:vega-lite.showPreview"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.sayHello",
-                "title": "Hello World"
+                "command": "vega-lite.showPreview",
+                "title": "Show Vega-Lite Preview"
             }
         ]
     },
