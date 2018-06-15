@@ -3,136 +3,91 @@
   "width": 400,
   "height": 200,
   "padding": 5,
-  "autosize": {"type": "fit", "resize": true},
-
-  "signals": [
-    {
-      "name": "maxbins", "value": 10,
-      "bind": {"input": "select", "options": [5, 10, 20]}
-    },
-    {
-      "name": "binDomain",
-      "update": "sequence(bins.start, bins.stop + bins.step, bins.step)"
-    },
-    {
-      "name": "nullGap", "value": 10
-    },
-    {
-      "name": "barStep",
-      "update": "(width - nullGap) / binDomain.length"
-    }
-  ],
 
   "data": [
     {
       "name": "table",
-      "url": "data/movies.json",
-      "transform": [
-        {
-          "type": "extent", "field": "IMDB_Rating",
-          "signal": "extent"
-        },
-        {
-          "type": "bin", "signal": "bins",
-          "field": "IMDB_Rating", "extent": {"signal": "extent"},
-          "maxbins": {"signal": "maxbins"}
-        }
+      "values": [
+        {"category": "A", "amount": 28},
+        {"category": "B", "amount": 55},
+        {"category": "C", "amount": 43},
+        {"category": "D", "amount": 91},
+        {"category": "E", "amount": 81},
+        {"category": "F", "amount": 53},
+        {"category": "G", "amount": 19},
+        {"category": "H", "amount": 87}
       ]
-    },
+    }
+  ],
+
+  "signals": [
     {
-      "name": "counts",
-      "source": "table",
-      "transform": [
-        {
-          "type": "filter",
-          "expr": "datum['IMDB_Rating'] != null"
-        },
-        {
-          "type": "aggregate",
-          "groupby": ["bin0", "bin1"]
-        }
-      ]
-    },
-    {
-      "name": "nulls",
-      "source": "table",
-      "transform": [
-        {
-          "type": "filter",
-          "expr": "datum['IMDB_Rating'] == null"
-        },
-        {
-          "type": "aggregate"
-        }
+      "name": "tooltip",
+      "value": {},
+      "on": [
+        {"events": "rect:mouseover", "update": "datum"},
+        {"events": "rect:mouseout",  "update": "{}"}
       ]
     }
   ],
 
   "scales": [
     {
-      "name": "yscale",
-      "type": "linear",
-      "range": "height",
-      "round": true, "nice": true,
-      "domain": {
-        "fields": [
-          {"data": "counts", "field": "count"},
-          {"data": "nulls", "field": "count"}
-        ]
-      }
-    },
-    {
       "name": "xscale",
-      "type": "bin-linear",
-      "range": [{"signal": "barStep + nullGap"}, {"signal": "width"}],
-      "round": true,
-      "domain": {"signal": "binDomain"}
+      "type": "band",
+      "domain": {"data": "table", "field": "category"},
+      "range": "width",
+      "padding": 0.05,
+      "round": true
     },
     {
-      "name": "xscale-null",
-      "type": "band",
-      "range": [0, {"signal": "barStep"}],
-      "round": true,
-      "domain": [null]
+      "name": "yscale",
+      "domain": {"data": "table", "field": "amount"},
+      "nice": true,
+      "range": "height"
     }
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "xscale", "tickCount": 10},
-    {"orient": "bottom", "scale": "xscale-null"},
-    {"orient": "left", "scale": "yscale", "tickCount": 5, "offset": 5}
+    { "orient": "bottom", "scale": "xscale" },
+    { "orient": "left", "scale": "yscale" }
   ],
 
   "marks": [
     {
       "type": "rect",
-      "from": {"data": "counts"},
+      "from": {"data":"table"},
       "encode": {
+        "enter": {
+          "x": {"scale": "xscale", "field": "category"},
+          "width": {"scale": "xscale", "band": 1},
+          "y": {"scale": "yscale", "field": "amount"},
+          "y2": {"scale": "yscale", "value": 0}
+        },
         "update": {
-          "x": {"scale": "xscale", "field": "bin0", "offset": 1},
-          "x2": {"scale": "xscale", "field": "bin1"},
-          "y": {"scale": "yscale", "field": "count"},
-          "y2": {"scale": "yscale", "value": 0},
           "fill": {"value": "steelblue"}
         },
         "hover": {
-          "fill": {"value": "firebrick"}
+          "fill": {"value": "red"}
         }
       }
     },
     {
-      "type": "rect",
-      "from": {"data": "nulls"},
+      "type": "text",
       "encode": {
-        "update": {
-          "x": {"scale": "xscale-null", "value": null, "offset": 1},
-          "x2": {"scale": "xscale-null", "band": 1},
-          "y": {"scale": "yscale", "field": "count"},
-          "y2": {"scale": "yscale", "value": 0},
-          "fill": {"value": "#aaa"}
+        "enter": {
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "fill": {"value": "#333"}
         },
-        "hover": {
-          "fill": {"value": "firebrick"}
+        "update": {
+          "x": {"scale": "xscale", "signal": "tooltip.category", "band": 0.5},
+          "y": {"scale": "yscale", "signal": "tooltip.amount", "offset": -2},
+          "text": {"signal": "tooltip.amount"},
+          "fillOpacity": [
+            {"test": "datum === tooltip", "value": 0},
+            {"value": 1}
+          ]
         }
       }
     }

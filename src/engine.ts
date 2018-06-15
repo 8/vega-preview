@@ -43,10 +43,3 @@ export function vg2svg(content: string): Promise<ProcessOutput> {
 export function vl2vg(content: string): Promise<ProcessOutput> {
   return startProcess("vl2vg", content);
 }
-
-// class VegaEngine {
-// }
-
-// export const vegaEngine = new VegaEngine();
-
-//   readonly args = "vl2vg | vg2svg";

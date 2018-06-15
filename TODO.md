@@ -5,10 +5,15 @@
 - [x] Open a preview window for the specified file
 - [x] Register Updates when the file changes
 
-- [ ] Invoke vg2svg when a vega file changes
+- [ ] use vega nodejs module
 
-- [ ] Invoke vl2vg when a vega-lite file changes
-<!-- - [ ] Invoke vl2vg and vg2svg to create an svg -->
+- [ ] render svg
+
+- [ ] use vega-lite nodejs module 
+
+  - [ ] Invoke vg2svg when a vega file changes
+  - [ ] Invoke vl2vg when a vega-lite file changes
+
 - [ ] errors reported by vega / vega-lite
 
 ---

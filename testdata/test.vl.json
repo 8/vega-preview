@@ -7,7 +7,7 @@
       { "date": "03.06.2018", "count": 34 },
       { "date": "04.06.2018", "count": 143 }
     ],
-    "formatddddd": {
+    "format": {
       "parse": {
         "date": "%d.%m.%y"
       }

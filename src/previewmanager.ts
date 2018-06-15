@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { renderSvg } from './renderer';
 
 class PreviewManager {
   private readonly previews = new WeakMap<vscode.TextDocument, vscode.WebviewPanel>();
@@ -32,10 +33,16 @@ class PreviewManager {
       this.updatePreviewContent(textDocument, preview);
     }
   }
-
-  private updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel) {
+  
+  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel) {
     let content = textDocument.getText();
-    preview.webview.html = `<html><body><p>This is the preview!</p><pre><code>${content}</code></pre></body></html>`;
+    preview.webview.html = await this.getPreviewHtml(content);
+  }
+
+  private async getPreviewHtml(content: string): Promise<string> {
+    // return `<html><body><p>This is the preview!</p><pre><code>${content}</code></pre></body></html>`;
+    const svg = await renderSvg(content);
+    return `<html><head></head><body>${svg}</body>`;
   }
 
   private getPreviewTitle(document: vscode.TextDocument): string {
