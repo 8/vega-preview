@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
-import { renderSvg } from './renderer';
+import { renderVegaToSvg, renderVegaLiteToSvg } from './renderer';
+
+export type ViewType = "vega-preview" | "vega-lite-preview";
 
 class PreviewManager {
   private readonly previews = new WeakMap<vscode.TextDocument, vscode.WebviewPanel>();
-  private readonly viewType = "vega-preview";
 
   private getColumn(activeColumn?: vscode.ViewColumn): vscode.ViewColumn {
     var ret: vscode.ViewColumn;
@@ -15,10 +16,10 @@ class PreviewManager {
     return ret;
   }
 
-  public async showPreviewFor(textEditor: vscode.TextEditor) {
+  public async showPreviewFor(textEditor: vscode.TextEditor, viewType: ViewType) {
     let preview = this.previews.get(textEditor.document);
-    if (!preview){
-      preview = await this.createPreview(textEditor.document, this.getColumn(textEditor.viewColumn));
+    if (!preview) {
+      preview = await this.createPreview(textEditor.document, this.getColumn(textEditor.viewColumn), viewType);
       this.previews.set(textEditor.document, preview);
     } else {
       preview.reveal(textEditor.viewColumn || this.getColumn(textEditor.viewColumn), true);
@@ -29,32 +30,49 @@ class PreviewManager {
     /* do we have a preview for that document? */
     let preview = this.previews.get(textDocument);
     if (preview) {
-      // console.log(`Updating content for document '${textDocument}'`);
       this.updatePreviewContent(textDocument, preview);
     }
   }
   
   private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel) {
     let content = textDocument.getText();
-    preview.webview.html = await this.getPreviewHtml(content);
+    let viewType = preview.viewType as ViewType;
+    preview.webview.html = await this.getPreviewHtml(content, viewType);
   }
 
-  private async getPreviewHtml(content: string): Promise<string> {
-    // return `<html><body><p>This is the preview!</p><pre><code>${content}</code></pre></body></html>`;
-    const svg = await renderSvg(content);
+  private async getPreviewHtml(content: string, viewType: ViewType): Promise<string> {
+
+    let svg: string;
+    switch (viewType) {
+      case "vega-preview":
+        svg = await renderVegaToSvg(content);
+        break;
+      case "vega-lite-preview":
+        svg = await renderVegaLiteToSvg(content);
+        break;
+      default:
+        svg = "";
+        break;
+    }
+
     return `<html><head></head><body>${svg}</body>`;
   }
 
-  private getPreviewTitle(document: vscode.TextDocument): string {
-    return `Preview for '${document.fileName}'`;
+  private getPreviewTitle(document: vscode.TextDocument, viewType: ViewType): string {
+    let previewType: string;
+    switch (viewType) {
+      case "vega-lite-preview": previewType = "Vega-Lite Preview"; break;
+      case "vega-preview": previewType = "Vega Preview"; break;
+      default: previewType =""; break;
+    }
+    return `${previewType} for '${document.fileName}'`;
   }
 
-  private async createPreview(textDocument: vscode.TextDocument, viewColumn: vscode.ViewColumn) : Promise<vscode.WebviewPanel> {
-
+  private async createPreview(textDocument: vscode.TextDocument, viewColumn: vscode.ViewColumn, viewType: ViewType) : Promise<vscode.WebviewPanel> {
     /* create the preview */
     const preview = vscode.window.createWebviewPanel(
-      this.viewType,
-      this.getPreviewTitle(textDocument),
+      viewType,
+      this.getPreviewTitle(textDocument, viewType),
       {
         viewColumn: viewColumn,
         preserveFocus: true
@@ -73,7 +91,6 @@ class PreviewManager {
 
     return preview;
   }
-
 }
 
 export const previewManager = new PreviewManager();

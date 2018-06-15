@@ -1,25 +1,24 @@
 'use strict';
 import * as vscode from 'vscode';
-import { previewManager } from './previewmanager';
+import { previewManager, ViewType } from './previewmanager';
 
-const previewCommand = "vega-lite.showPreview";
+type PreviewCommand = "vega-preview.showVegaPreview" | "vega-preview.showVegaLitePreview";
 
 /* main entrypoint */
 export function activate(context: vscode.ExtensionContext) {
-    console.log("vega-lite-preview: activate()");
+
+    function createCommand(previewCommand: PreviewCommand, viewType: ViewType): vscode.Disposable {
+        return vscode.commands.registerCommand(previewCommand, async () => {
+            const activeEditor = vscode.window.activeTextEditor;
+            if (activeEditor) {
+                await previewManager.showPreviewFor(activeEditor, viewType);
+            }
+        });
+    }
 
     const disposables = [
-        vscode.commands.registerCommand(previewCommand, async () => {
-            console.log("vega-lite-preview: command showPreview");
-            
-            /* get the currently active editor */
-            const activeEditor = vscode.window.activeTextEditor;
-            
-            /* create a preview window for it */
-            if (activeEditor) {
-                await previewManager.showPreviewFor(activeEditor);
-            }
-        }),
+        createCommand("vega-preview.showVegaPreview", "vega-preview"),
+        createCommand("vega-preview.showVegaLitePreview", "vega-lite-preview"),
         vscode.workspace.onDidChangeTextDocument(e => previewManager.updatePreviewFor(e.document))
     ];
     context.subscriptions.concat(disposables);

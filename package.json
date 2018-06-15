@@ -1,7 +1,7 @@
 {
-    "name": "vega-lite-preview",
-    "displayName": "Vega-Lite Preview",
-    "description": "Preview for Vega-Lite",
+    "name": "vega-preview",
+    "displayName": "Vega Preview",
+    "description": "Preview for Vega and Vega-Lite",
     "version": "0.0.1",
     "publisher": "mdk",
     "engines": {
@@ -11,13 +11,18 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:vega-lite.showPreview"
+        "onCommand:vega-preview.showVegaPreview",
+        "onCommand:vega-preview.showVegaLitePreview"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "vega-lite.showPreview",
+                "command": "vega-preview.showVegaPreview",
+                "title": "Show Vega Preview"
+            },
+            {
+                "command": "vega-preview.showVegaLitePreview",
                 "title": "Show Vega-Lite Preview"
             }
         ]
