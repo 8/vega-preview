@@ -1,9 +1,8 @@
 import { View, Spec, parse } from "vega-lib";
+import { compile as compileVegaLite } from "vega-lite";
 
-export function renderVegaToSvg(content: string): Promise<string> {
+function renderVegaSpecToSvg(spec: Spec): Promise<string> {
   return new Promise((resolve, reject) => {
-
-    let spec = JSON.parse(content) as Spec;
 
     const view = new View(parse(spec))
     .renderer('none')
@@ -15,9 +14,13 @@ export function renderVegaToSvg(content: string): Promise<string> {
   });
 }
 
-export function renderVegaLiteToSvg(content: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    /* todo: implement vega-lite rendering! */
-    return "";
-  });
+export function renderVegaStringToSvg(content: string): Promise<string> {
+    let spec = JSON.parse(content) as Spec;
+    return renderVegaSpecToSvg(spec);
+}
+
+export function renderVegaLiteStringToSvg(content: string): Promise<string> {
+  let vlSpec = JSON.parse(content);
+  let vgSpec = compileVegaLite(vlSpec).spec;
+  return renderVegaSpecToSvg(vgSpec);
 }

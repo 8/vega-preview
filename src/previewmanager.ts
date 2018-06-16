@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { renderVegaToSvg, renderVegaLiteToSvg } from './renderer';
+import { renderVegaStringToSvg, renderVegaLiteStringToSvg } from './renderer';
 
 export type ViewType = "vega-preview" | "vega-lite-preview";
 
@@ -45,10 +45,10 @@ class PreviewManager {
     let svg: string;
     switch (viewType) {
       case "vega-preview":
-        svg = await renderVegaToSvg(content);
+        svg = await renderVegaStringToSvg(content);
         break;
       case "vega-lite-preview":
-        svg = await renderVegaLiteToSvg(content);
+        svg = await renderVegaLiteStringToSvg(content);
         break;
       default:
         svg = "";
