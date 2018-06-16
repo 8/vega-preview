@@ -3,8 +3,11 @@ import { renderVegaStringToSvg, renderVegaLiteStringToSvg } from './renderer';
 
 export type ViewType = "vega-preview" | "vega-lite-preview";
 
-class PreviewManager {
+export class PreviewManager {
   private readonly previews = new WeakMap<vscode.TextDocument, vscode.WebviewPanel>();
+
+  constructor(private template: string) {
+  }
 
   private getColumn(activeColumn?: vscode.ViewColumn): vscode.ViewColumn {
     var ret: vscode.ViewColumn;
@@ -30,17 +33,17 @@ class PreviewManager {
     /* do we have a preview for that document? */
     let preview = this.previews.get(textDocument);
     if (preview) {
-      this.updatePreviewContent(textDocument, preview);
+      this.updatePreviewContent(textDocument, preview, this.template);
     }
   }
   
-  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel) {
+  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel, template: string) {
     let content = textDocument.getText();
     let viewType = preview.viewType as ViewType;
-    preview.webview.html = await this.getPreviewHtml(content, viewType);
+    preview.webview.html = await this.getPreviewHtml(content, viewType, template);
   }
 
-  private async getPreviewHtml(content: string, viewType: ViewType): Promise<string> {
+  private async getPreviewHtml(content: string, viewType: ViewType, template: string): Promise<string> {
 
     let svg: string;
     switch (viewType) {
@@ -55,7 +58,7 @@ class PreviewManager {
         break;
     }
 
-    return `<html><head></head><body>${svg}</body>`;
+    return template.replace('<div id="vega"></div>', svg);
   }
 
   private getPreviewTitle(document: vscode.TextDocument, viewType: ViewType): string {
@@ -84,7 +87,7 @@ class PreviewManager {
     );
 
     /* fill the preview */
-    this.updatePreviewContent(textDocument, preview);
+    this.updatePreviewContent(textDocument, preview, this.template);
 
     /* wire up the event handlers */
     preview.onDidDispose(() => this.previews.delete(textDocument));
@@ -92,5 +95,3 @@ class PreviewManager {
     return preview;
   }
 }
-
-export const previewManager = new PreviewManager();
