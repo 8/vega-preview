@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { renderVegaStringToSvg, renderVegaLiteStringToSvg } from './renderer';
 
@@ -40,7 +41,9 @@ export class PreviewManager {
   private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel, template: string) {
     let content = textDocument.getText();
     let viewType = preview.viewType as ViewType;
-    preview.webview.html = await this.getPreviewHtml(content, viewType, template);
+    let baseFolder = path.dirname(textDocument.fileName);
+    // let baseFolder = path.dirname(textDocument.uri.path);
+    preview.webview.html = await this.getPreviewHtml(content, viewType, template, baseFolder);
   }
 
   private replaceSvgPlaceholder(template: string, svg: string) {
@@ -51,14 +54,14 @@ export class PreviewManager {
     return template.replace(/<div id="errors">.*?<\/div>/, `${error}`);
   }
 
-  private async renderContentToSvg(content: string, viewType: ViewType): Promise<string> {
+  private async renderContentToSvg(content: string, viewType: ViewType, baseFolder: string): Promise<string> {
     let svg: Promise<string>;
     switch (viewType) {
       case "vega-preview":
-        svg = renderVegaStringToSvg(content);
+        svg = renderVegaStringToSvg(content, baseFolder);
         break;
       case "vega-lite-preview":
-        svg = renderVegaLiteStringToSvg(content);
+        svg = renderVegaLiteStringToSvg(content, baseFolder);
         break;
       default:
         svg = Promise.resolve("");
@@ -67,11 +70,11 @@ export class PreviewManager {
     return svg;
   }
 
-  private async getPreviewHtml(content: string, viewType: ViewType, template: string): Promise<string> {
+  private async getPreviewHtml(content: string, viewType: ViewType, template: string, baseFolder: string): Promise<string> {
     let svg: string ="";
     let error: string ="";
     try {
-      svg = await this.renderContentToSvg(content, viewType);
+      svg = await this.renderContentToSvg(content, viewType, baseFolder);
     } catch (e) {
       error = e.message;
     }
