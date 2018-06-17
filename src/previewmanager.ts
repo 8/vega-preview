@@ -43,22 +43,30 @@ export class PreviewManager {
     preview.webview.html = await this.getPreviewHtml(content, viewType, template);
   }
 
-  private async getPreviewHtml(content: string, viewType: ViewType, template: string): Promise<string> {
+  private replaceTemplate(template: string, svg: string) {
+    return template.replace(/<div id="vega">.*?<\/div>/, `${svg}`);
+  }
 
-    let svg: string;
+  private async renderContentToSvg(content: string, viewType: ViewType): Promise<string> {
+    let svg: Promise<string>;
     switch (viewType) {
       case "vega-preview":
-        svg = await renderVegaStringToSvg(content);
+        svg = renderVegaStringToSvg(content);
         break;
       case "vega-lite-preview":
-        svg = await renderVegaLiteStringToSvg(content);
+        svg = renderVegaLiteStringToSvg(content);
         break;
       default:
-        svg = "";
+        svg = Promise.resolve("");
         break;
     }
+    return svg;
+  }
 
-    return template.replace('<div id="vega"></div>', svg);
+  private async getPreviewHtml(content: string, viewType: ViewType, template: string): Promise<string> {
+    let svg = await this.renderContentToSvg(content, viewType);
+    let html = this.replaceTemplate(template, svg);
+    return html;
   }
 
   private getPreviewTitle(document: vscode.TextDocument, viewType: ViewType): string {
