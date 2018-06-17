@@ -5,11 +5,47 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Vega Preview</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
-  <!-- <script src="main.js"></script> -->
 </head>
 <body>
-  <h1>Vega Preview</h1>
-  <div id="vega"></div>
+
+  <style>
+    body {
+      background: white;
+      margin: 0;
+    }
+    .container {
+      display: grid;
+      grid-template-rows: 0px 100%;
+    }
+    .header {
+      background-color: darkgrey;
+    }
+    .content {
+      margin: 10px;
+      height: 100%;
+      justify-self: center;
+    }
+    #vega {
+      /* border: 2px solid black;
+      width: 100px;
+      height: 100px; */
+    }
+    #errors {
+      /* border: 2px solid black;
+      width: 100px;
+      height: 100px; */
+    }
+  </style>
+
+  <div class="container">
+    
+    <div class="header"></div>
+
+    <div class="content">
+        <!-- don't touch the following lines, they are placeholders and replaced by the previewManager -->
+      <div id="vega"></div>
+      <div id="errors"></div>
+    </div>
+  </div>
 </body>
 </html>
