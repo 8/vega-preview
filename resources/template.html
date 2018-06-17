@@ -25,15 +25,11 @@
       height: 100%;
       justify-self: center;
     }
-    #vega {
-      /* border: 2px solid black;
-      width: 100px;
-      height: 100px; */
+    .svg-container {
     }
-    #errors {
-      /* border: 2px solid black;
-      width: 100px;
-      height: 100px; */
+    .error-container {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: black;
     }
   </style>
 
@@ -42,9 +38,13 @@
     <div class="header"></div>
 
     <div class="content">
-        <!-- don't touch the following lines, they are placeholders and replaced by the previewManager -->
-      <div id="vega"></div>
-      <div id="errors"></div>
+      <!-- don't touch the following lines, they are placeholders and replaced by the previewManager -->
+      <div class="svg-container">
+        <div id="vega">This is the placeholder for the svg.</div>
+      </div>
+      <div class="error-container">
+        <div id="errors">This is the placeholder for the errors.</div>
+      </div>
     </div>
   </div>
 </body>

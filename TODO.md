@@ -11,10 +11,12 @@
 - [x] rename extension to vega-preview
 - [x] load template from filesystem
 - [x] add white background to template
+- [x] center svg
+- [x] display errors reported by vega / vega-lite
 
-- [ ] center svg
-- [ ] display errors reported by vega / vega-lite
 - [ ] fix loading of external data files
+- [ ] add refresh graph command in case the external data file changed
+- [ ] save svg with button
 
 - [ ] publish source code to github
 - [ ] publish to visual studio marketplace

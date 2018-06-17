@@ -43,8 +43,12 @@ export class PreviewManager {
     preview.webview.html = await this.getPreviewHtml(content, viewType, template);
   }
 
-  private replaceTemplate(template: string, svg: string) {
+  private replaceSvgPlaceholder(template: string, svg: string) {
     return template.replace(/<div id="vega">.*?<\/div>/, `${svg}`);
+  }
+
+  private replaceErrorPlaceholder(template: string, error: string) {
+    return template.replace(/<div id="errors">.*?<\/div>/, `${error}`);
   }
 
   private async renderContentToSvg(content: string, viewType: ViewType): Promise<string> {
@@ -64,8 +68,17 @@ export class PreviewManager {
   }
 
   private async getPreviewHtml(content: string, viewType: ViewType, template: string): Promise<string> {
-    let svg = await this.renderContentToSvg(content, viewType);
-    let html = this.replaceTemplate(template, svg);
+    let svg: string ="";
+    let error: string ="";
+    try {
+      svg = await this.renderContentToSvg(content, viewType);
+    } catch (e) {
+      error = e.message;
+    }
+
+    let html = template;
+    html = this.replaceSvgPlaceholder(html, svg);
+    html = this.replaceErrorPlaceholder(html, error);
     return html;
   }
 
