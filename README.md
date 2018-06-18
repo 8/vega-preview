@@ -1,41 +1,40 @@
-# vega-lite-preview README
+# vega-preview README
 
-vega-lite-preview provides a preview windows for a vega and vega-lite json files.
+vega-preview provides a preview windows for a vega and vega-lite json files.
 
-The extension is very much inspired by graphviz-preview!
+The source code of this extension is available at: https://github/8/vega-preview
+
+The extension is very much inspired by the great [graphviz-preview](https://github.com/EFanZh/Graphviz-Preview) extension!
 
 ## Features
 
-<!-- Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file. -->
+### Preview for Vega Files
+<!-- ![Live Preview Vega](resources/images/previewVega.gif) -->
 
-<!-- For example if there is an image subfolder under your extension project workspace:
+Live-Preview for Vega json files.
 
-\!\[feature X\]\(images/feature-x.png\)
+### Preview for Vega-Lite Files
+<!-- ![Live Preview VegaLite](resources/images/previewVegaLite.gif) -->
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow. -->
+Live-Preview for Vega-Lite json files.
 
-## Requirements
+### Export to Svg
+<!-- ![Export Svg](resources/images/exportToSvg.gif) -->
 
-<!-- If you have any requirements or dependencies, add a section describing those and how to install and configure them. -->
+Export Vega and Vega-Lite json files to svg.
 
-## Extension Settings
+<!-- ## Requirements -->
 
-<!-- Include if your extension adds any VS Code settings through the `contributes.configuration` extension point. -->
+<!-- ## Extension Settings -->
 
-<!-- For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
- -->
 ## Known Issues
+
+- Loading External Data is only supported using relative paths
+  (No absolute paths or URIs!)
 
 <!-- Calling out known issues can help limit users opening duplicate issues against your extension. -->
 
 ## Release Notes
 
-<!-- Users appreciate release notes as you update your extension. -->
-
-### 0.0.1
-Internal Test Build
+### 0.9.0
+Initial Release
