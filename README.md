@@ -2,26 +2,26 @@
 
 vega-preview provides a preview windows for a vega and vega-lite json files.
 
-The source code of this extension is available at: https://github/8/vega-preview
+The source code of this extension is available at: https://github.com/8/vega-preview
 
 The extension is very much inspired by the great [graphviz-preview](https://github.com/EFanZh/Graphviz-Preview) extension!
 
 ## Features
 
 ### Preview for Vega Files
-<!-- ![Live Preview Vega](resources/images/previewVega.gif) -->
+Live-Preview for Vega json files using the command `vega-preview.showVegaPreview`.
 
-Live-Preview for Vega json files.
+![Live Preview Vega](resources/images/vega-preview.gif)
 
 ### Preview for Vega-Lite Files
-<!-- ![Live Preview VegaLite](resources/images/previewVegaLite.gif) -->
+Live-Preview for Vega-Lite json files using the command `vega-preview.showVegaLitePreview`.
 
-Live-Preview for Vega-Lite json files.
+![Live Preview VegaLite](resources/images/vega-lite-preview.gif)
 
 ### Export to Svg
-<!-- ![Export Svg](resources/images/exportToSvg.gif) -->
+Export Vega and Vega-Lite json files to svg using the commands `vega-preview.exportVegaToSvg` and `vega-preview.exportVegaLiteToSvg` respectively.
 
-Export Vega and Vega-Lite json files to svg.
+![Export Svg](resources/images/vega-lite-export.gif)
 
 <!-- ## Requirements -->
 
