@@ -24,19 +24,19 @@
         "commands": [
             {
                 "command": "vega-preview.showVegaPreview",
-                "title": "Show Vega Preview"
+                "title": "Vega: Show Preview"
             },
             {
                 "command": "vega-preview.showVegaLitePreview",
-                "title": "Show Vega-Lite Preview"
+                "title": "Vega-Lite: Show Preview"
             },
             {
                 "command": "vega-preview.exportVegaToSvg",
-                "title": "Export Vega to Svg"
+                "title": "Vega: Export to Svg"
             },
             {
                 "command": "vega-preview.exportVegaLiteToSvg",
-                "title": "Export Vega-Lite to Svg"
+                "title": "Vega-Lite: Export to Svg"
             }
         ]
     },
