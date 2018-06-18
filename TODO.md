@@ -13,10 +13,9 @@
 - [x] add white background to template
 - [x] center svg
 - [x] display errors reported by vega / vega-lite
+- [x] publish source code to github
+- [x] export svg per commands
 
-- [ ] fix loading of external data files
-- [ ] add refresh graph command in case the external data file changed
-- [ ] save svg with button
-
-- [ ] publish source code to github
+- [ ] rename command labels to start with "Vega: "
+- [ ] add support for loading external data files per uri and absolute file path
 - [ ] publish to visual studio marketplace
