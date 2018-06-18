@@ -12,7 +12,9 @@
     ],
     "activationEvents": [
         "onCommand:vega-preview.showVegaPreview",
-        "onCommand:vega-preview.showVegaLitePreview"
+        "onCommand:vega-preview.showVegaLitePreview",
+        "onCommand:vega-preview.exportVegaToSvg",
+        "onCommand:vega-preview.exportVegaLiteToSvg"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -24,6 +26,14 @@
             {
                 "command": "vega-preview.showVegaLitePreview",
                 "title": "Show Vega-Lite Preview"
+            },
+            {
+                "command": "vega-preview.exportVegaToSvg",
+                "title": "Export Vega to Svg"
+            },
+            {
+                "command": "vega-preview.exportVegaLiteToSvg",
+                "title": "Export Vega-Lite to Svg"
             }
         ]
     },
