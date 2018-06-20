@@ -32,6 +32,7 @@ Visual Studio Code 1.24.0+
 
 - Loading External Data is only supported using relative paths
   (No absolute paths or URIs!)
+- The preview is a static Svg, no interactions are currently supported
 
 <!-- Calling out known issues can help limit users opening duplicate issues against your extension. -->
 
