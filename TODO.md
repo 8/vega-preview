@@ -15,7 +15,14 @@
 - [x] display errors reported by vega / vega-lite
 - [x] publish source code to github
 - [x] export svg per commands
+- [x] register visual studio market place account
+- [x] create publisher
+- [x] create vsix package
+- [x] test vsix package
+- [x] rename command labels to start with "Vega: " and "Vega-Lite: "
+- [x] create animated gifs from usage
+- [x] publish to visual studio marketplace
+- [x] refactor code
 
-- [ ] rename command labels to start with "Vega: "
+- [ ] keep displaying the last valid image while editing
 - [ ] add support for loading external data files per uri and absolute file path
-- [ ] publish to visual studio marketplace
