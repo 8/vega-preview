@@ -7,7 +7,7 @@ export type ViewType = "vega-preview" | "vega-lite-preview";
 export class PreviewManager {
   private readonly previews = new WeakMap<vscode.TextDocument, vscode.WebviewPanel>();
 
-  constructor(private template: string) {
+  constructor(private getTemplate: () => string) {
   }
 
   private getColumn(activeColumn?: vscode.ViewColumn): vscode.ViewColumn {
@@ -34,7 +34,7 @@ export class PreviewManager {
     /* do we have a preview for that document? */
     let preview = this.previews.get(textDocument);
     if (preview) {
-      this.updatePreviewContent(textDocument, preview, this.template);
+      this.updatePreviewContent(textDocument, preview, this.getTemplate());
     }
   }
   
@@ -111,7 +111,7 @@ export class PreviewManager {
     );
 
     /* fill the preview */
-    this.updatePreviewContent(textDocument, preview, this.template);
+    this.updatePreviewContent(textDocument, preview, this.getTemplate());
 
     /* wire up the event handlers */
     preview.onDidDispose(() => this.previews.delete(textDocument));

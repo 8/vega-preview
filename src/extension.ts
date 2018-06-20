@@ -1,8 +1,8 @@
 'use strict';
 import * as vscode from 'vscode';
 import { ViewType, PreviewManager } from './previewmanager';
-import * as fs from 'fs';
 import { SvgExporter,  FileFormat } from './svgexporter';
+import { HtmlTemplateManager } from './htmltemplatemanager';
 
 type PreviewCommand = "vega-preview.showVegaPreview" | "vega-preview.showVegaLitePreview";
 type ExportCommand = "vega-preview.exportVegaToSvg" | "vega-preview.exportVegaLiteToSvg";
@@ -10,9 +10,8 @@ type ExportCommand = "vega-preview.exportVegaToSvg" | "vega-preview.exportVegaLi
 /* main entrypoint */
 export function activate(context: vscode.ExtensionContext) {
 
-    const templateFile = context.asAbsolutePath("resources/template.html");
-    const template = fs.readFileSync(templateFile, "utf8");
-    const previewManager = new PreviewManager(template);
+    const templateManager = new HtmlTemplateManager(context.asAbsolutePath("resources"));
+    const previewManager = new PreviewManager(() => templateManager.getTemplate());
     const svgExporter = new SvgExporter();
 
     function createPreviewCommand(previewCommand: PreviewCommand, viewType: ViewType): vscode.Disposable {
