@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 export interface IHtmlTemplateManager {
   getTemplate(): string;
 }
