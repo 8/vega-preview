@@ -1,17 +1,7 @@
-// import { View, Spec, parse } from "vega-lib";
 import { View, Spec, parse, loader, Loader }  from "vega";
 import { compile as compileVegaLite } from "vega-lite";
 import * as fs from 'fs';
 import * as path from 'path';
-
-// const load = fileLoader.load;
-// const oldDirectory = process.cwd();
-// process.chdir(baseFolder);
-// return load(uri, options).then(s => {
-//   process.chdir(oldDirectory);
-//   return s;
-// });
-// const template = fs.readFileSync(templateFile, "utf8");
 
 function getFileLoader(baseFolder: string): Loader {
   let fileLoader = loader();
