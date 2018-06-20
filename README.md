@@ -23,7 +23,8 @@ Export Vega and Vega-Lite json files to svg using the commands `vega-preview.exp
 
 ![Export Svg](resources/images/vega-lite-export.gif)
 
-<!-- ## Requirements -->
+## Requirements
+Visual Studio Code 1.24.0+
 
 <!-- ## Extension Settings -->
 
