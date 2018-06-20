@@ -1,9 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { renderVegaStringToSvg, renderVegaLiteStringToSvg  } from './renderer';
-
-export type FileFormat = "vega" | "vega-lite";
+import { renderSvg, FileFormat  } from './renderer';
 
 export class SvgExporter {
 
@@ -16,19 +14,7 @@ export class SvgExporter {
     const text = textDocument.getText(),
           folder = path.dirname(textDocument.fileName);
 
-    let svg: string;
-    switch (fileFormat) {
-      case "vega": 
-        svg = await renderVegaStringToSvg(text, folder);
-        break;
-      case "vega-lite":
-        svg = await renderVegaLiteStringToSvg(text, folder);
-        break;
-      default:
-        svg="";
-        break;
-    }
-    return svg;
+    return renderSvg(fileFormat, text, folder);
   }
 
   private async getSvgFileName(textDocument: vscode.TextDocument): Promise<string | undefined> {

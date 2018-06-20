@@ -1,14 +1,11 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { renderVegaStringToSvg, renderVegaLiteStringToSvg } from './renderer';
-
-export type ViewType = "vega-preview" | "vega-lite-preview";
+import { renderSvg, FileFormat } from './renderer';
 
 export class PreviewManager {
   private readonly previews = new WeakMap<vscode.TextDocument, vscode.WebviewPanel>();
 
-  constructor(private getTemplate: () => string) {
-  }
+  constructor(private getTemplate: () => string) {}
 
   private getColumn(activeColumn?: vscode.ViewColumn): vscode.ViewColumn {
     var ret: vscode.ViewColumn;
@@ -20,7 +17,7 @@ export class PreviewManager {
     return ret;
   }
 
-  public async showPreviewFor(textEditor: vscode.TextEditor, viewType: ViewType) {
+  public async showPreviewFor(textEditor: vscode.TextEditor, viewType: FileFormat) {
     let preview = this.previews.get(textEditor.document);
     if (!preview) {
       preview = await this.createPreview(textEditor.document, this.getColumn(textEditor.viewColumn), viewType);
@@ -40,9 +37,8 @@ export class PreviewManager {
   
   private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel, template: string) {
     let content = textDocument.getText();
-    let viewType = preview.viewType as ViewType;
+    let viewType = preview.viewType as FileFormat;
     let baseFolder = path.dirname(textDocument.fileName);
-    // let baseFolder = path.dirname(textDocument.uri.path);
     preview.webview.html = await this.getPreviewHtml(content, viewType, template, baseFolder);
   }
 
@@ -54,27 +50,11 @@ export class PreviewManager {
     return template.replace(/<div id="errors">.*?<\/div>/, `${error}`);
   }
 
-  private async renderContentToSvg(content: string, viewType: ViewType, baseFolder: string): Promise<string> {
-    let svg: Promise<string>;
-    switch (viewType) {
-      case "vega-preview":
-        svg = renderVegaStringToSvg(content, baseFolder);
-        break;
-      case "vega-lite-preview":
-        svg = renderVegaLiteStringToSvg(content, baseFolder);
-        break;
-      default:
-        svg = Promise.resolve("");
-        break;
-    }
-    return svg;
-  }
-
-  private async getPreviewHtml(content: string, viewType: ViewType, template: string, baseFolder: string): Promise<string> {
+  private async getPreviewHtml(content: string, viewType: FileFormat, template: string, baseFolder: string): Promise<string> {
     let svg: string ="";
     let error: string ="";
     try {
-      svg = await this.renderContentToSvg(content, viewType, baseFolder);
+      svg = await renderSvg(viewType, content, baseFolder);
     } catch (e) {
       error = e.message;
     }
@@ -85,17 +65,17 @@ export class PreviewManager {
     return html;
   }
 
-  private getPreviewTitle(document: vscode.TextDocument, viewType: ViewType): string {
+  private getPreviewTitle(document: vscode.TextDocument, fileFormat: FileFormat): string {
     let previewType: string;
-    switch (viewType) {
-      case "vega-lite-preview": previewType = "Vega-Lite Preview"; break;
-      case "vega-preview": previewType = "Vega Preview"; break;
+    switch (fileFormat) {
+      case "vega-lite": previewType = "Vega-Lite Preview"; break;
+      case "vega": previewType = "Vega Preview"; break;
       default: previewType =""; break;
     }
     return `${previewType} for '${document.fileName}'`;
   }
 
-  private async createPreview(textDocument: vscode.TextDocument, viewColumn: vscode.ViewColumn, viewType: ViewType) : Promise<vscode.WebviewPanel> {
+  private async createPreview(textDocument: vscode.TextDocument, viewColumn: vscode.ViewColumn, viewType: FileFormat) : Promise<vscode.WebviewPanel> {
     /* create the preview */
     const preview = vscode.window.createWebviewPanel(
       viewType,

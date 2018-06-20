@@ -1,8 +1,9 @@
 'use strict';
 import * as vscode from 'vscode';
-import { ViewType, PreviewManager } from './previewmanager';
-import { SvgExporter,  FileFormat } from './svgexporter';
+import { PreviewManager } from './previewmanager';
+import { SvgExporter } from './svgexporter';
 import { HtmlTemplateManager } from './htmltemplatemanager';
+import { FileFormat } from './renderer';
 
 type PreviewCommand = "vega-preview.showVegaPreview" | "vega-preview.showVegaLitePreview";
 type ExportCommand = "vega-preview.exportVegaToSvg" | "vega-preview.exportVegaLiteToSvg";
@@ -14,11 +15,11 @@ export function activate(context: vscode.ExtensionContext) {
     const previewManager = new PreviewManager(() => templateManager.getTemplate());
     const svgExporter = new SvgExporter();
 
-    function createPreviewCommand(previewCommand: PreviewCommand, viewType: ViewType): vscode.Disposable {
+    function createPreviewCommand(previewCommand: PreviewCommand, fileFormat: FileFormat): vscode.Disposable {
         return vscode.commands.registerCommand(previewCommand, async () => {
             const activeEditor = vscode.window.activeTextEditor;
             if (activeEditor) {
-                await previewManager.showPreviewFor(activeEditor, viewType);
+                await previewManager.showPreviewFor(activeEditor, fileFormat);
             }
         });
     }
@@ -33,8 +34,8 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const disposables = [
-        createPreviewCommand("vega-preview.showVegaPreview", "vega-preview"),
-        createPreviewCommand("vega-preview.showVegaLitePreview", "vega-lite-preview"),
+        createPreviewCommand("vega-preview.showVegaPreview", "vega"),
+        createPreviewCommand("vega-preview.showVegaLitePreview", "vega-lite"),
         createExportCommand("vega-preview.exportVegaToSvg", "vega"),
         createExportCommand("vega-preview.exportVegaLiteToSvg", "vega-lite"),
         vscode.workspace.onDidChangeTextDocument(e => previewManager.updatePreviewFor(e.document))
