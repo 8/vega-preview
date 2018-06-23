@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-export interface IHtmlTemplateManager {
+export interface ITemplateManager {
   getTemplate(): string;
 }
 
@@ -10,7 +10,7 @@ class TemplateModel {
   public content: string = "";
 }
 
-export class HtmlTemplateManager implements IHtmlTemplateManager {
+export class TemplateManager implements ITemplateManager {
   private templates: Array<TemplateModel>;
 
   public constructor(private templateFolder: string) {

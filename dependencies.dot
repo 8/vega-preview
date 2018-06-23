@@ -1,0 +1,22 @@
+digraph {
+  label = Dependencies
+  node [shape=box, fontname=Consolas]
+  edge [fontname=Consolas]
+  graph [fontname=Consolas]
+
+  Extension
+  TemplateManager
+  PreviewManager
+  Renderer
+  Vega [label="Vega / Vega-Lite"]
+  SvgExporter
+  HtmlContentService
+
+  Extension -> PreviewManager [label="Show Preview\nCommand"]
+  Extension -> SvgExporter [label="Export Svg\nCommand"]
+  PreviewManager -> { HtmlContentService }
+  SvgExporter -> Renderer
+  Renderer -> Vega
+
+  HtmlContentService -> { TemplateManager, Renderer }
+}

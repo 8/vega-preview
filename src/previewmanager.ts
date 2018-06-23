@@ -1,11 +1,13 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { renderSvg, FileFormat } from './renderer';
+import { FileFormat } from './renderer';
+import { IHtmlContentService } from './htmlcontentservice';
 
 export class PreviewManager {
   private readonly previews = new WeakMap<vscode.TextDocument, vscode.WebviewPanel>();
 
-  constructor(private getTemplate: () => string) {}
+  constructor(private htmlContentService: IHtmlContentService) {
+  }
 
   private getColumn(activeColumn?: vscode.ViewColumn): vscode.ViewColumn {
     var ret: vscode.ViewColumn;
@@ -31,38 +33,15 @@ export class PreviewManager {
     /* do we have a preview for that document? */
     let preview = this.previews.get(textDocument);
     if (preview) {
-      this.updatePreviewContent(textDocument, preview, this.getTemplate());
+      this.updatePreviewContent(textDocument, preview);
     }
   }
-  
-  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel, template: string) {
+
+  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel) {
     let content = textDocument.getText();
-    let viewType = preview.viewType as FileFormat;
+    let fileFormat = preview.viewType as FileFormat;
     let baseFolder = path.dirname(textDocument.fileName);
-    preview.webview.html = await this.getPreviewHtml(content, viewType, template, baseFolder);
-  }
-
-  private replaceSvgPlaceholder(template: string, svg: string) {
-    return template.replace(/<div id="vega">.*?<\/div>/, `${svg}`);
-  }
-
-  private replaceErrorPlaceholder(template: string, error: string) {
-    return template.replace(/<div id="errors">.*?<\/div>/, `${error}`);
-  }
-
-  private async getPreviewHtml(content: string, viewType: FileFormat, template: string, baseFolder: string): Promise<string> {
-    let svg: string ="";
-    let error: string ="";
-    try {
-      svg = await renderSvg(viewType, content, baseFolder);
-    } catch (e) {
-      error = e.message;
-    }
-
-    let html = template;
-    html = this.replaceSvgPlaceholder(html, svg);
-    html = this.replaceErrorPlaceholder(html, error);
-    return html;
+    preview.webview.html = await this.htmlContentService.getPreviewHtml(fileFormat, content, baseFolder);
   }
 
   private getPreviewTitle(document: vscode.TextDocument, fileFormat: FileFormat): string {
@@ -91,7 +70,7 @@ export class PreviewManager {
     );
 
     /* fill the preview */
-    this.updatePreviewContent(textDocument, preview, this.getTemplate());
+    this.updatePreviewContent(textDocument, preview);
 
     /* wire up the event handlers */
     preview.onDidDispose(() => this.previews.delete(textDocument));
