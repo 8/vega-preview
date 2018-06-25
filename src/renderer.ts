@@ -7,7 +7,7 @@ export type FileFormat = "vega" | "vega-lite";
 
 function getFileLoader(baseFolder: string): Loader {
   let fileLoader = loader();
-  fileLoader.load = (uri: string, options: any) => {
+  fileLoader.load = (uri: string) => {
     return new Promise((resolve, reject) => {
       fs.readFile(path.join(baseFolder, uri), "utf8", (err, data) => {
         if (err) { reject(err); }
@@ -35,8 +35,8 @@ function renderVegaSpecToSvg(spec: Spec, baseFolder: string): Promise<string> {
 }
 
 function renderVegaStringToSvg(content: string, baseFolder: string): Promise<string> {
-    let spec = JSON.parse(content) as Spec;
-    return renderVegaSpecToSvg(spec, baseFolder);
+  let spec = JSON.parse(content) as Spec;
+  return renderVegaSpecToSvg(spec, baseFolder);
 }
 
 function renderVegaLiteStringToSvg(content: string, baseFolder: string): Promise<string> {
@@ -47,11 +47,11 @@ function renderVegaLiteStringToSvg(content: string, baseFolder: string): Promise
 
 export function renderSvg(viewType: FileFormat, content: string, baseFolder: string): Promise<string> {
   switch (viewType) {
-    case "vega-lite": 
+    case "vega-lite":
       return renderVegaLiteStringToSvg(content, baseFolder);
     case "vega":
       return renderVegaStringToSvg(content, baseFolder);
-    default: 
+    default:
       throw new Error(`Unknown viewType: '${viewType}'`);
   }
 }

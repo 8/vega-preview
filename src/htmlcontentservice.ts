@@ -1,12 +1,16 @@
 import { FileFormat, renderSvg } from "./renderer";
 import { ITemplateManager } from "./templatemanager";
+import * as vscode from 'vscode';
 
 export interface IHtmlContentService {
-  getPreviewHtml(fileFormat: FileFormat, svg: string, baseFolder: string): Promise<string>;
+  getPreviewHtml(fileFormat: FileFormat, textDocument: vscode.TextDocument, baseFolder: string): Promise<string>;
 }
 
 export class HtmlContentService implements IHtmlContentService {
-  constructor(private templateManager: ITemplateManager) {}
+  private readonly svgCache: WeakMap<vscode.TextDocument, string>;
+  constructor(private templateManager: ITemplateManager) {
+    this.svgCache = new WeakMap<vscode.TextDocument, string>();
+  }
 
   private replaceSvgPlaceholder(template: string, svg: string) {
     return template.replace(/<div id="vega">.*?<\/div>/, `${svg}`);
@@ -16,13 +20,22 @@ export class HtmlContentService implements IHtmlContentService {
     return template.replace(/<div id="errors">.*?<\/div>/, `${error}`);
   }
 
-  public async getPreviewHtml(fileFormat: FileFormat, content: string, baseFolder: string): Promise<string> {
+  public async getPreviewHtml(fileFormat: FileFormat, textDocument: vscode.TextDocument, baseFolder: string): Promise<string> {
     let svg: string ="";
     let error: string ="";
+    let content = textDocument.getText();
     try {
       svg = await renderSvg(fileFormat, content, baseFolder);
+
+      /* update the cache for this document */
+      this.svgCache.set(textDocument, svg);
+
     } catch (e) {
+
       error = e.message;
+
+      /* use the last valid svg for this document, if any */
+      svg = this.svgCache.get(textDocument) || "";
     }
 
     let html = this.templateManager.getTemplate();

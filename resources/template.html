@@ -15,19 +15,21 @@
     }
     .container {
       display: grid;
-      grid-template-rows: 0px 100%;
+      grid-template-rows: 10px 100%;
     }
-    .header {
+    /* .header {
       background-color: darkgrey;
+    } */
+    .error-container {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: red;
+      font-size: 14pt;
     }
-    .content {
-      margin: 10px;
-      height: 100%;
+    .svg-container {
       justify-self: center;
     }
     .error-container {
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      color: black;
+      justify-self: center;
     }
   </style>
 
@@ -35,14 +37,12 @@
     
     <div class="header"></div>
 
-    <div class="content">
-      <!-- don't touch the following lines, they are placeholders and replaced by the previewManager -->
-      <div class="svg-container">
-        <div id="vega">This is the placeholder for the svg.</div>
-      </div>
-      <div class="error-container">
-        <div id="errors">This is the placeholder for the errors.</div>
-      </div>
+    <!-- don't touch the following lines, they are placeholders and replaced by the previewManager -->
+    <div class="svg-container">
+      <div id="vega">This is the placeholder for the svg.</div>
+    </div>
+    <div class="error-container">
+      <div id="errors">This is the placeholder for the errors.</div>
     </div>
   </div>
 </body>

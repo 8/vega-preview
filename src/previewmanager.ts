@@ -29,19 +29,18 @@ export class PreviewManager {
     }
   }
 
-  public updatePreviewFor(textDocument: vscode.TextDocument) {
+   public async updatePreviewFor(textDocument: vscode.TextDocument): Promise<void> {
     /* do we have a preview for that document? */
     let preview = this.previews.get(textDocument);
     if (preview) {
-      this.updatePreviewContent(textDocument, preview);
+      await this.updatePreviewContent(textDocument, preview);
     }
   }
 
-  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel) {
-    let content = textDocument.getText();
+  private async updatePreviewContent(textDocument: vscode.TextDocument, preview: vscode.WebviewPanel): Promise<void> {
     let fileFormat = preview.viewType as FileFormat;
     let baseFolder = path.dirname(textDocument.fileName);
-    preview.webview.html = await this.htmlContentService.getPreviewHtml(fileFormat, content, baseFolder);
+    preview.webview.html = await this.htmlContentService.getPreviewHtml(fileFormat, textDocument, baseFolder);
   }
 
   private getPreviewTitle(document: vscode.TextDocument, fileFormat: FileFormat): string {

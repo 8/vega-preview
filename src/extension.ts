@@ -38,7 +38,11 @@ export function activate(context: vscode.ExtensionContext) {
         createPreviewCommand("vega-preview.showVegaLitePreview", "vega-lite"),
         createExportCommand("vega-preview.exportVegaToSvg", "vega"),
         createExportCommand("vega-preview.exportVegaLiteToSvg", "vega-lite"),
-        vscode.workspace.onDidChangeTextDocument(e => previewManager.updatePreviewFor(e.document))
+        vscode.workspace.onDidChangeTextDocument(e => {
+            if (e.contentChanges.length > 0) {
+                previewManager.updatePreviewFor(e.document);
+            }
+        })
     ];
     context.subscriptions.concat(disposables);
 }
